@@ -1,0 +1,154 @@
+figure
+A=[1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0]
+B=[0.0,9.0,0.0,0.0,0.0,0.0,0.0,0.0]
+corrimiento=2;
+%graficar funcion 1
+for n=1:1:length(A)
+	xFunc1(n)=linspace(n-1,n-1,1)
+end
+for n=1:1:length(xFunc1)
+	XFunc1(n)=xFunc1(n)-corrimiento +1
+end
+for n=1:1:length(A)
+	YFunc1(n)=A(n)
+end
+stem(XFunc1,YFunc1)
+title('Funcion 1');
+xlabel('n');
+ylabel('x(n)');
+print("C:\\Users\\Erick1\\Documents\\NetBeansProjects\\PoyectoSenales\\salidaGUI\\imagen1.png","-dpng") 
+%graficar funcion 2
+for n=1:1:length(B)
+	xFunc2(n)=linspace(n-1,n-1,1)
+end
+for n=1:1:length(xFunc2)
+	XFunc2(n)=xFunc2(n)-corrimiento +1
+end
+for n=1:1:length(B)
+	YFunc2(n)=B(n)
+end
+stem(XFunc2,YFunc2)
+title('Funcion 2');
+xlabel('n');
+ylabel('x(n)');
+print("C:\\Users\\Erick1\\Documents\\NetBeansProjects\\PoyectoSenales\\salidaGUI\\imagen2.png","-dpng") 
+% declaracion de funciones
+function [m] = suma (A,B)
+	m=A+B
+endfunction
+function [n] = resta(A,B)
+	n=A-B
+endfunction
+% puede que la multiplicacion sea por un escalar y no un vector por otro
+function [o] = multiplicacion(A,B)
+	for n=1:1:length(A)
+		o(n)=A(n)*B(n)
+	end
+endfunction
+function [d]=desplazamiento(corrimiento)
+	d=corrimiento*(-1)
+endfunction
+function [p]=reflejo(A)
+	for n=1:1:length(A)
+		p(n)=A(length(A)-n+1)
+	end
+endfunction
+function [x] = atenuacionAmplificacion (A,factor)
+	x=A*factor
+endfunction
+function [p]=diezmacion(A,origen,factordiezmacion)
+	% valores detras del origen
+	modulo=mod(origen,factordiezmacion)
+	if modulo==0
+		valor=factordiezmacion
+	else
+		valor=modulo
+	end		
+
+	i=1
+	for n= valor:factordiezmacion:length(A)
+		p(i)=A(n)
+		i=i+1
+	end
+	
+%	for n=mod(origen,factordiezmacion):factordiezmacion:length(A)/factordiezmacion
+%		p(n)=A(n)
+%	end
+endfunction
+function [q]=interpolacionACero(A,factorInterpolacion)
+	%el valor inicial(i) de los datos a interpolar
+	i=1
+	for n=1:1:factorInterpolacion*length(A)
+		if(mod(n,factorInterpolacion)==1)
+			q(n)=A(i)
+			%para almacenar el siguiente valor existente en A
+			i=i+1
+		else
+			q(n)=0
+		end
+	end
+endfunction
+function [q]=interpolacionAEscalon(A,factorInterpolacion)
+	%el valor inicial(i) de los datos a interpolar(entrada)
+	i=1
+	%hacer la salida del doble del tamanio de la entrada
+	%n sera el indice de la salida resultante
+	for n=1:1:factorInterpolacion*length(A)
+		if(mod(n,factorInterpolacion)~=0)
+			q(n)=A(i)
+			%para almacenar el siguiente valor existente en A
+		
+		else
+			
+			q(n)=A(i)
+			i=i+1
+		end
+	end
+endfunction	
+function [q]=interpolacionLineal(A,factorInterpolacion)
+	%numeroiteracion=2
+	indiceAlterno=1
+	
+	for n=1:1:length(A)-1
+		delta=(A(n+1)-A(n))/factorInterpolacion
+		q(indiceAlterno)=A(n)
+		for i=1:1:factorInterpolacion
+			indiceAlterno=indiceAlterno+1
+			q(indiceAlterno)=q(indiceAlterno-1)+delta
+			%numeroiteracion=numeroiteracion+i
+		end
+	end
+	delta=-q(indiceAlterno)/factorInterpolacion
+	for n=1:1:factorInterpolacion-1
+		indiceAlterno=indiceAlterno+1
+		q(indiceAlterno)=q(indiceAlterno-1)+delta
+	end
+endfunction	
+%fin de declaracion
+corrimiento=desplazamiento(corrimiento-1)
+z=multiplicacion(A,B)
+x1= linspace(0,0,1)';
+x2= linspace(1,1,1)';
+x3= linspace(2,2,1)';
+x4= linspace(3,3,1)';
+x5= linspace(4,4,1)';
+x6= linspace(5,5,1)';
+x7= linspace(6,6,1)';
+x8= linspace(7,7,1)';
+y1=z(1);
+y2=z(2);
+y3=z(3);
+y4=z(4);
+y5=z(5);
+y6=z(6);
+y7=z(7);
+y8=z(8);
+X=[x1+corrimiento,x2+corrimiento,x3+corrimiento,x4+corrimiento,x5+corrimiento,x6+corrimiento,x7+corrimiento,x8+corrimiento];
+Y=[y1,y2,y3,y4,y5,y6,y7,y8];
+stem(X,Y)
+title('Bolanos Pulido Carlos. Castillo Luna Erick. 3CV7');
+
+xlabel('n');
+
+ylabel('x(n)');
+print("C:\\Users\\Erick1\\Documents\\NetBeansProjects\\PoyectoSenales\\salidaGUI\\imagen3.png","-dpng")
